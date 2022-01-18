@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NextPage } from 'next'
 import { Box, Heading, AspectRatio } from "theme-ui";
 import Layout from '../containers/Layout'
