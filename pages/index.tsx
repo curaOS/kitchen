@@ -11,43 +11,41 @@ import OptionComp from '../components/OptionComp'
 const CONTRACT = "demo.ashen99.testnet";
 
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 Tgas
-const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
+
+const defaultDecoder = [
+  {
+    type: "line",
+    color: "#ffff00",
+    height: 10,
+    width: 10,
+  },
+  {
+    type: "text",
+    color: "#ffff00",
+    text: "😀",
+  },
+  {
+    type: "ellipse",
+    color: "#ffff00",
+    height: 10,
+    width: 10,
+  },
+  {
+    type: "rectangle",
+    color: "#ffff00",
+    height: 10,
+    width: 10,
+  },
+  {
+    type: "point",
+    color: "#ffff00",
+  },
+];
 
 const Home: NextPage = () => {
   const [creativeCode, setCretiveCode] = useState(``);
   const [decoder, setDecoder] = useState(defaultDecoder);
   const [formState, setFormState] = useState(defaultDecoder);
-
-  const defaultDecoder = [
-    {
-      type: "line",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    {
-      type: "text",
-      color: "#ffff00",
-      text: "😀",
-    },
-    {
-      type: "ellipse",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    {
-      type: "rectangle",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    {
-      type: "point",
-      color: "#ffff00",
-    },
-  ];
-  const [decoder, setDecoder] = useState(defaultDecoder);
 
   const data = useNFTMethod(
     `${CONTRACT}`,
