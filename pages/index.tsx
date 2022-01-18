@@ -11,35 +11,35 @@ const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 
 const Home: NextPage = () => {
   const [creativeCode, setCretiveCode] = useState(``);
 
-  const defaultDecoder = {
-    1: {
+  const defaultDecoder = [
+    {
       type: "line",
       color: "#ffff00",
       height: 10,
       width: 10,
     },
-    2: {
+    {
       type: "text",
       color: "#ffff00",
       text: "😀",
     },
-    3: {
+    {
       type: "ellipse",
       color: "#ffff00",
       height: 10,
       width: 10,
     },
-    4: {
+    {
       type: "rectangle",
       color: "#ffff00",
       height: 10,
       width: 10,
     },
-    5: {
+    {
       type: "point",
       color: "#ffff00",
     },
-  };
+  ];
   const [decoder, setDecoder] = useState(defaultDecoder);
 
   const data = useNFTMethod(
@@ -125,19 +125,19 @@ const Home: NextPage = () => {
                   
                   function drawInstruction(ins, x, y) {
                     if (ins == 1) {
-                      ${generateDrawJs(1)}
+                      ${generateDrawJs(0)}
                     }
                     if (ins == 2) {
-                      ${generateDrawJs(2)}
+                      ${generateDrawJs(1)}
                     }
                     if (ins == 3) {
-                      ${generateDrawJs(3)}
+                      ${generateDrawJs(2)}
                     }
                     if (ins == 4) {
-                      ${generateDrawJs(4)}
+                      ${generateDrawJs(3)}
                     }
                     if (ins == 5) {
-                      ${generateDrawJs(5)}
+                      ${generateDrawJs(4)}
                     }
                   }
               </script>
