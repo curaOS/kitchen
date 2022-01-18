@@ -10,13 +10,14 @@ const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 T
 
 const Home: NextPage = () => {
 
-  const [creativeCode, setCretiveCode] = useState();
+  const [creativeCode, setCretiveCode] = useState(``);
 
   const data = useNFTMethod(
         `${CONTRACT}`,
         `generate`,
         {},
-        CONTRACT_VIEW_GAS,
+        100,
+        () => {}
   )
 
   useEffect(()=>{
