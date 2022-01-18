@@ -63,6 +63,7 @@ const Home: NextPage = () => {
 
   
   function generateDrawJs(i: number): string {
+    i -= 1;
     let funcJs = "";
     let colorJs = "";
     if (decoder[i].type == "line") {
