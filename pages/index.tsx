@@ -10,35 +10,35 @@ import OptionComp from '../components/OptionComp'
 
 const CONTRACT = "demo.ashen99.testnet";
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
-const defaultDecoder = {
-    1: {
-      type: "line",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    2: {
-      type: "text",
-      color: "#ffff00",
-      text: "😀",
-    },
-    3: {
-      type: "ellipse",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    4: {
-      type: "rectangle",
-      color: "#ffff00",
-      height: 10,
-      width: 10,
-    },
-    5: {
-      type: "point",
-      color: "#ffff00",
-    },
-  };
+const defaultDecoder = [
+   {
+     type: "line",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "text",
+     color: "#ffff00",
+     text: "😀",
+   },
+   {
+     type: "ellipse",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "rectangle",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "point",
+     color: "#ffff00",
+   },
+];
 
 
 const Home: NextPage = () => {

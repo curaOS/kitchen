@@ -22,24 +22,35 @@ export default function OptionComp(props){
 	const onChangeHandler=(e, id)=>{
 
 		const { name, value } = e.target;
+		id = id-1;
+
+		let oldEntries = JSON.parse(JSON.stringify(props.formState));
 
 		if(name === 'type'){
-			props.setFormState({
-				...props.formState,
-				[selectedMenu]:{
-					[name]: value
-				}
-			})
+			if(value == 'line' || value == 'ellipse' || value == 'rectangle'){
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+					height: 0,
+					width: 0
+				})
+			} else if(value == 'text'){
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+					text:''
+				})
+			} else {
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+				})
+			}
+		} else {
+			oldEntries[id][name] = value;
 		}
-		else{
-			props.setFormState({
-				...props.formState,
-				[selectedMenu]:{
-					...props.formState[selectedMenu],
-					[name]: value
-				}
-			})
-		}
+
+		props.setFormState(oldEntries)
   	}
 
 	return(
@@ -73,7 +84,7 @@ export default function OptionComp(props){
 
           <Box sx={{ mb: 3 }}>  
             <Label htmlFor='type' sx={{ mb:2 }}>Type</Label>
-            <Select name='type' id='type' value={props.formState[selectedMenu].type} onChange={(e)=> onChangeHandler(e, selectedMenu)}>
+            <Select name='type' id='type' value={props.formState[selectedMenu-1].type} onChange={(e)=> onChangeHandler(e, selectedMenu)}>
               <option value='line'>Line</option>
               <option value='text'>Text</option>
               <option value='ellipse'>Ellipse</option>
@@ -84,28 +95,28 @@ export default function OptionComp(props){
 
           <Grid columns={[null, 2]}>
 
-          	{props.formState[selectedMenu].type == 'text' && 
+          	{props.formState[selectedMenu-1].type == 'text' && 
 	            <Box sx={{ mt:2 }}>
 	              <Label htmlFor='text' sx={{ mb:2 }}>Text</Label>
-	              <Input name='text' id='text' min={0} value={props.formState[selectedMenu].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+	              <Input name='text' id='text' min={0} value={props.formState[selectedMenu-1].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
 	            </Box>
         	}
 
             <Box sx={{ mt:2 }}>
               <Label htmlFor='color' sx={{ mb:2 }}>Color</Label>
-              <Input name='color' id='color' type='text' value={props.formState[selectedMenu].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+              <Input name='color' id='color' type='text' value={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
             </Box>
 
-            {(props.formState[selectedMenu].type == 'line' || props.formState[selectedMenu].type == 'ellipse' || props.formState[selectedMenu].type == 'rectangle') &&
+            {(props.formState[selectedMenu-1].type == 'line' || props.formState[selectedMenu-1].type == 'ellipse' || props.formState[selectedMenu-1].type == 'rectangle') &&
 	            <>
 		            <Box sx={{ mt:2 }}>
 		              <Label htmlFor='width' sx={{ mb:2 }}>Width</Label>
-		              <Input name='width' id='width' min={0} type='number' value={props.formState[selectedMenu].width} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+		              <Input name='width' id='width' min={0} type='number' value={props.formState[selectedMenu-1].width} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
 		            </Box>
 
 		            <Box sx={{ mt:2 }}>
 		              <Label htmlFor='height' sx={{ mb:2 }}>Height</Label>
-		              <Input name='height' id='height' min={0} type='number' value={props.formState[selectedMenu].height} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+		              <Input name='height' id='height' min={0} type='number' value={props.formState[selectedMenu-1].height} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
 		            </Box>
 	            </>
         	}
