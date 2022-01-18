@@ -66,7 +66,7 @@ const Home: NextPage = () => {
       funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
     }
     if (decoder[i].type == "point") {
-      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+      funcJs = `point(x, y)`;
     }
     colorJs = `fill("${decoder[i].color}")`;
 
