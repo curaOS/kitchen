@@ -64,12 +64,10 @@ const Home: NextPage = () => {
                             for (let j = 0; j < SIZE; j++) {
                                 c = String.fromCodePoint(instructions[j + i * SIZE])
 
-                                color(instructions[j + i * SIZE] / 10000)
-
-                                rect(
+                                text(
+                                    c,
                                     canvasStart[0] + j * canvasStep[0],
                                     canvasStart[1] + i * canvasStep[1],
-                                    20
                                 )
                             }
                         }
