@@ -61,6 +61,33 @@ const Home: NextPage = () => {
     setDecoder(formState);
   }
 
+  
+  function generateDrawJs(i: number): string {
+    let funcJs = "";
+    let colorJs = "";
+    if (decoder[i].type == "line") {
+      funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "text") {
+      funcJs = `text("${decoder[i].text}", x, y)`;
+    }
+    if (decoder[i].type == "ellipse") {
+      funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "rectangle") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "point") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    colorJs = `fill("${decoder[i].color}")`;
+
+    return `
+      ${funcJs}
+      ${colorJs}
+    `;
+  }
+
   useEffect(()=>{
     if(data?.data?.instructions){
       const arweaveHTML = 
@@ -103,15 +130,27 @@ const Home: NextPage = () => {
                         textSize(canvasTextSize)
                         for (let i = 0; i < SIZE; i++) {
                             for (let j = 0; j < SIZE; j++) {
-                                c = String.fromCodePoint(instructions[j + i * SIZE])
-
-                                text(
-                                    c,
-                                    canvasStart[0] + j * canvasStep[0],
-                                    canvasStart[1] + i * canvasStep[1],
-                                )
+                              drawInstruction(instructions[j + i * SIZE], canvasStart[0] + j * canvasStep[0], canvasStart[1] + i * canvasStep[1])
                             }
                         }
+                    }
+                  }
+                  
+                  function drawInstruction(ins, x, y) {
+                    if (ins == 1) {
+                      ${generateDrawJs(1)}
+                    }
+                    if (ins == 2) {
+                      ${generateDrawJs(2)}
+                    }
+                    if (ins == 3) {
+                      ${generateDrawJs(3)}
+                    }
+                    if (ins == 4) {
+                      ${generateDrawJs(4)}
+                    }
+                    if (ins == 5) {
+                      ${generateDrawJs(5)}
                     }
                   }
               </script>
