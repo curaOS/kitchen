@@ -1,15 +1,22 @@
-import type { NextPage } from "next";
+// @ts-nocheck
+import type { NextPage } from 'next'
 import { Box, Heading, AspectRatio } from "theme-ui";
 import Layout from "../containers/Layout";
 import { useNFTMethod } from "@cura/hooks";
 import { utils } from "near-api-js";
 import { useEffect, useState } from "react";
 
+import OptionComp from '../components/OptionComp'
+
 const CONTRACT = "demo.ashen99.testnet";
+
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 Tgas
+const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
 
 const Home: NextPage = () => {
   const [creativeCode, setCretiveCode] = useState(``);
+  const [decoder, setDecoder] = useState(defaultDecoder);
+  const [formState, setFormState] = useState(defaultDecoder);
 
   const defaultDecoder = [
     {
@@ -76,9 +83,11 @@ const Home: NextPage = () => {
     `;
   }
 
-  useEffect(() => {
-    if (data?.data?.instructions) {
-      const arweaveHTML = `<html>
+
+  useEffect(()=>{
+    if(data?.data?.instructions){
+      const arweaveHTML = 
+          `<html>
             <head>
               <meta charset="utf-8" />
                 <script>let jsonParams = '${JSON.stringify({
@@ -183,29 +192,35 @@ const Home: NextPage = () => {
             textAlign: "center",
           }}
         >
-          <AspectRatio
-            ratio={1}
-            sx={{
-              bg: "gray.3",
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "center",
-              mb: 36,
-              width: ["100%", "100%", "100%", "70%"],
-              maxHeight: ["100%", "100%", "100%", "70%"],
-              marginLeft: "auto",
-              marginRight: ["auto", "auto", "auto", "10%"],
-            }}
-          >
-            <iframe
-              srcDoc={creativeCode}
-              width={`100%`}
-              height={`100%`}
-              frameBorder="0"
-              scrolling="no"
-            ></iframe>
-          </AspectRatio>
+            <AspectRatio
+                ratio={1}
+                sx={{
+                    bg: 'gray.3',
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: ['100%', '100%', '100%', '70%'],
+                    maxHeight: ['100%', '100%', '100%', '70%'],
+                    marginLeft: 'auto',
+                    marginRight:['auto', 'auto', 'auto', 'auto']
+                }}
+            >
+                <iframe
+                    srcDoc={creativeCode}
+                    width={`100%`}
+                    height={`100%`}
+                    frameBorder="0"
+                    scrolling="no"
+                ></iframe>
+            </AspectRatio>
         </Box>
+
+        <OptionComp 
+          formState={formState}
+          setFormState={setFormState}
+          submitChanges={submitChanges}
+        />
+
       </Box>
     </Layout>
   );
