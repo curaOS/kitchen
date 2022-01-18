@@ -46,7 +46,7 @@ export default function OptionComp(props){
 		  as="form" 
 		  onSubmit={props.submitChanges}
           sx={{
-            px:5,
+            px:[3, 5],
             mb: 5
           }}
         >
