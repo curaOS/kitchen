@@ -75,6 +75,7 @@ const Home: NextPage = () => {
                                   c = "t"
                                 }
 
+                                fill("#ffffff")
                                 text(
                                     c,
                                     canvasStart[0] + j * canvasStep[0],
