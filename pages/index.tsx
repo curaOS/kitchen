@@ -71,8 +71,8 @@ const Home: NextPage = () => {
     colorJs = `fill("${decoder[i].color}")`;
 
     return `
-      ${funcJs}
       ${colorJs}
+      ${funcJs}
     `;
   }
 
