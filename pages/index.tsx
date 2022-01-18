@@ -62,7 +62,18 @@ const Home: NextPage = () => {
                         textSize(canvasTextSize)
                         for (let i = 0; i < SIZE; i++) {
                             for (let j = 0; j < SIZE; j++) {
-                                c = String.fromCodePoint(instructions[j + i * SIZE])
+
+                                if(instructions[j + i * SIZE] == 1){
+                                  c = "r"
+                                }else if(instructions[j + i * SIZE] == 2){
+                                  c = "1"
+                                }else if(instructions[j + i * SIZE] == 3){
+                                  c = "s"
+                                }else if(instructions[j + i * SIZE] == 4){
+                                  c = "2"
+                                }else if(instructions[j + i * SIZE]== 5){
+                                  c = "t"
+                                }
 
                                 text(
                                     c,
