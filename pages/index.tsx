@@ -5,12 +5,46 @@ import { useNFTMethod } from '@cura/hooks'
 import { utils } from 'near-api-js'
 import { useEffect, useState } from 'react'
 
+import OptionComp from '../components/OptionComp'
+
 const CONTRACT = "demo.ashen99.testnet";
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
+const defaultDecoder = {
+    1: {
+      type: "line",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    2: {
+      type: "text",
+      color: "#ffff00",
+      text: "😀",
+    },
+    3: {
+      type: "ellipse",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    4: {
+      type: "rectangle",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    5: {
+      type: "point",
+      color: "#ffff00",
+    },
+  };
+
 
 const Home: NextPage = () => {
 
   const [creativeCode, setCretiveCode] = useState(``);
+  const [decoder, setDecoder] = useState(defaultDecoder);
+  const [formState, setFormState] = useState(defaultDecoder);
 
   const data = useNFTMethod(
         `${CONTRACT}`,
@@ -19,6 +53,12 @@ const Home: NextPage = () => {
         10000000000000,
         () => {}
   )
+
+  const submitChanges=(e)=>{
+
+    e.preventDefault();
+    setDecoder(formState);
+  }
 
   useEffect(()=>{
     if(data?.data?.instructions){
@@ -99,7 +139,7 @@ const Home: NextPage = () => {
       setCretiveCode(arweaveHTML)
     }
   }, [data?.data?.instructions])
-    console.log(data.data)
+  
 
   return (
     <Layout>
@@ -122,11 +162,10 @@ const Home: NextPage = () => {
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'center',
-                    mb: 36,
                     width: ['100%', '100%', '100%', '70%'],
                     maxHeight: ['100%', '100%', '100%', '70%'],
                     marginLeft: 'auto',
-                    marginRight:['auto', 'auto', 'auto', '10%']
+                    marginRight:['auto', 'auto', 'auto', 'auto']
                 }}
             >
                 <iframe
@@ -138,6 +177,13 @@ const Home: NextPage = () => {
                 ></iframe>
             </AspectRatio>
         </Box>
+
+        <OptionComp 
+          formState={formState}
+          setFormState={setFormState}
+          submitChanges={submitChanges}
+        />
+
       </Box>
       </Layout>
   )
