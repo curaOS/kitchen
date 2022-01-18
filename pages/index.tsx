@@ -6,11 +6,42 @@ import { utils } from 'near-api-js'
 import { useEffect, useState } from 'react'
 
 const CONTRACT = "demo.ashen99.testnet";
-const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
+const CONTRACT_VIEWconst defaultCoder = {
+    1: {
+      type: "line",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    2: {
+      type: "text",
+      color: "#ffff00",
+      text: "😀",
+    },
+    3: {
+      type: "ellipse",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    4: {
+      type: "rectangle",
+      color: "#ffff00",
+      height: 10,
+      width: 10,
+    },
+    5: {
+      type: "point",
+      color: "#ffff00",
+    },
+  };
+
+
 
 const Home: NextPage = () => {
 
   const [creativeCode, setCretiveCode] = useState(``);
+  const [decoder, setDecoder] = useState(defaultCoder);
 
   const data = useNFTMethod(
         `${CONTRACT}`,
