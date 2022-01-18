@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         `${CONTRACT}`,
         `generate`,
         {},
-        1000,
+        10000,
         () => {}
   )
 
