@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NextPage } from 'next'
 import { Box, Heading, AspectRatio } from "theme-ui";
 import Layout from '../containers/Layout'
@@ -5,12 +6,46 @@ import { useNFTMethod } from '@cura/hooks'
 import { utils } from 'near-api-js'
 import { useEffect, useState } from 'react'
 
+import OptionComp from '../components/OptionComp'
+
 const CONTRACT = "demo.ashen99.testnet";
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
+const defaultDecoder = [
+   {
+     type: "line",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "text",
+     color: "#ffff00",
+     text: "😀",
+   },
+   {
+     type: "ellipse",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "rectangle",
+     color: "#ffff00",
+     height: 10,
+     width: 10,
+   },
+   {
+     type: "point",
+     color: "#ffff00",
+   },
+];
+
 
 const Home: NextPage = () => {
 
   const [creativeCode, setCretiveCode] = useState(``);
+  const [decoder, setDecoder] = useState(defaultDecoder);
+  const [formState, setFormState] = useState(defaultDecoder);
 
   const data = useNFTMethod(
         `${CONTRACT}`,
@@ -19,6 +54,39 @@ const Home: NextPage = () => {
         10000000000000,
         () => {}
   )
+
+  const submitChanges=(e)=>{
+
+    e.preventDefault();
+    setDecoder(formState);
+  }
+
+  
+  function generateDrawJs(i: number): string {
+    let funcJs = "";
+    let colorJs = "";
+    if (decoder[i].type == "line") {
+      funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "text") {
+      funcJs = `text("${decoder[i].text}", x, y)`;
+    }
+    if (decoder[i].type == "ellipse") {
+      funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "rectangle") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "point") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    colorJs = `fill("${decoder[i].color}")`;
+
+    return `
+      ${funcJs}
+      ${colorJs}
+    `;
+  }
 
   useEffect(()=>{
     if(data?.data?.instructions){
@@ -62,15 +130,27 @@ const Home: NextPage = () => {
                         textSize(canvasTextSize)
                         for (let i = 0; i < SIZE; i++) {
                             for (let j = 0; j < SIZE; j++) {
-                                c = String.fromCodePoint(instructions[j + i * SIZE])
-
-                                text(
-                                    c,
-                                    canvasStart[0] + j * canvasStep[0],
-                                    canvasStart[1] + i * canvasStep[1],
-                                )
+                              drawInstruction(instructions[j + i * SIZE], canvasStart[0] + j * canvasStep[0], canvasStart[1] + i * canvasStep[1])
                             }
                         }
+                    }
+                  }
+                  
+                  function drawInstruction(ins, x, y) {
+                    if (ins == 1) {
+                      ${generateDrawJs(1)}
+                    }
+                    if (ins == 2) {
+                      ${generateDrawJs(2)}
+                    }
+                    if (ins == 3) {
+                      ${generateDrawJs(3)}
+                    }
+                    if (ins == 4) {
+                      ${generateDrawJs(4)}
+                    }
+                    if (ins == 5) {
+                      ${generateDrawJs(5)}
                     }
                   }
               </script>
@@ -99,7 +179,7 @@ const Home: NextPage = () => {
       setCretiveCode(arweaveHTML)
     }
   }, [data?.data?.instructions])
-    console.log(data.data)
+  
 
   return (
     <Layout>
@@ -122,11 +202,10 @@ const Home: NextPage = () => {
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'center',
-                    mb: 36,
                     width: ['100%', '100%', '100%', '70%'],
                     maxHeight: ['100%', '100%', '100%', '70%'],
                     marginLeft: 'auto',
-                    marginRight:['auto', 'auto', 'auto', '10%']
+                    marginRight:['auto', 'auto', 'auto', 'auto']
                 }}
             >
                 <iframe
@@ -138,6 +217,13 @@ const Home: NextPage = () => {
                 ></iframe>
             </AspectRatio>
         </Box>
+
+        <OptionComp 
+          formState={formState}
+          setFormState={setFormState}
+          submitChanges={submitChanges}
+        />
+
       </Box>
       </Layout>
   )
