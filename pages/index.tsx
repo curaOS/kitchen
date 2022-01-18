@@ -1,12 +1,17 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 import { Box, Heading, AspectRatio } from "theme-ui";
-import Layout from '../containers/Layout'
-import { useNFTMethod } from '@cura/hooks'
-import { utils } from 'near-api-js'
-import { useEffect, useState } from 'react'
+import Layout from "../containers/Layout";
+import { useNFTMethod } from "@cura/hooks";
+import { utils } from "near-api-js";
+import { useEffect, useState } from "react";
 
 const CONTRACT = "demo.ashen99.testnet";
-const CONTRACT_VIEWconst defaultCoder = {
+const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 Tgas
+
+const Home: NextPage = () => {
+  const [creativeCode, setCretiveCode] = useState(``);
+
+  const defaultDecoder = {
     1: {
       type: "line",
       color: "#ffff00",
@@ -35,30 +40,49 @@ const CONTRACT_VIEWconst defaultCoder = {
       color: "#ffff00",
     },
   };
-
-
-
-const Home: NextPage = () => {
-
-  const [creativeCode, setCretiveCode] = useState(``);
-  const [decoder, setDecoder] = useState(defaultCoder);
+  const [decoder, setDecoder] = useState(defaultDecoder);
 
   const data = useNFTMethod(
-        `${CONTRACT}`,
-        `generate`,
-        {},
-        10000000000000,
-        () => {}
-  )
+    `${CONTRACT}`,
+    `generate`,
+    {},
+    10000000000000,
+    () => {}
+  );
 
-  useEffect(()=>{
-    if(data?.data?.instructions){
-      const arweaveHTML = 
-          `<html>
+  function generateDrawJs(i: number): string {
+    let funcJs = "";
+    let colorJs = "";
+    if (decoder[i].type == "line") {
+      funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "text") {
+      funcJs = `text("${decoder[i].text}", x, y)`;
+    }
+    if (decoder[i].type == "ellipse") {
+      funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "rectangle") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    if (decoder[i].type == "point") {
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+    }
+    colorJs = `fill("${decoder[i].color}")`;
+
+    return `
+      ${funcJs}
+      ${colorJs}
+    `;
+  }
+
+  useEffect(() => {
+    if (data?.data?.instructions) {
+      const arweaveHTML = `<html>
             <head>
               <meta charset="utf-8" />
                 <script>let jsonParams = '${JSON.stringify({
-                    instructions: data.data.instructions.split(`,`),
+                  instructions: data.data.instructions.split(`,`),
                 })}'
                 </script>
 
@@ -93,27 +117,27 @@ const Home: NextPage = () => {
                         textSize(canvasTextSize)
                         for (let i = 0; i < SIZE; i++) {
                             for (let j = 0; j < SIZE; j++) {
-
-                                if(instructions[j + i * SIZE] == 1){
-                                  c = "r"
-                                }else if(instructions[j + i * SIZE] == 2){
-                                  c = "1"
-                                }else if(instructions[j + i * SIZE] == 3){
-                                  c = "s"
-                                }else if(instructions[j + i * SIZE] == 4){
-                                  c = "2"
-                                }else if(instructions[j + i * SIZE]== 5){
-                                  c = "t"
-                                }
-
-                                fill("#ffffff")
-                                text(
-                                    c,
-                                    canvasStart[0] + j * canvasStep[0],
-                                    canvasStart[1] + i * canvasStep[1],
-                                )
+                              drawInstruction(instructions[j + i * SIZE], canvasStart[0] + j * canvasStep[0], canvasStart[1] + i * canvasStep[1])
                             }
                         }
+                    }
+                  }
+                  
+                  function drawInstruction(ins, x, y) {
+                    if (ins == 1) {
+                      ${generateDrawJs(1)}
+                    }
+                    if (ins == 2) {
+                      ${generateDrawJs(2)}
+                    }
+                    if (ins == 3) {
+                      ${generateDrawJs(3)}
+                    }
+                    if (ins == 4) {
+                      ${generateDrawJs(4)}
+                    }
+                    if (ins == 5) {
+                      ${generateDrawJs(5)}
                     }
                   }
               </script>
@@ -136,54 +160,55 @@ const Home: NextPage = () => {
               </style>
 
             </head>
-          </html>`
-      
+          </html>`;
 
-      setCretiveCode(arweaveHTML)
+      setCretiveCode(arweaveHTML);
     }
-  }, [data?.data?.instructions])
-    console.log(data.data)
+  }, [data?.data?.instructions]);
+  console.log(data.data);
 
   return (
     <Layout>
       <Box sx={{ textAlign: "center" }}>
-        <Heading m={50} as='h1'>Share</Heading>
+        <Heading m={50} as="h1">
+          Share
+        </Heading>
         <Box
-            sx={{
-                display: ['block', 'block', 'block','inline-block'],
-                width: ['100%', '70%', '70%', '50%'],
-                mr: [0, 'auto', 'auto', 4],
-                ml: [0, 'auto', 'auto', 0],
-                mb: [4, 4, 0, 0],
-                textAlign:'center',
-            }}
+          sx={{
+            display: ["block", "block", "block", "inline-block"],
+            width: ["100%", "70%", "70%", "50%"],
+            mr: [0, "auto", "auto", 4],
+            ml: [0, "auto", "auto", 0],
+            mb: [4, 4, 0, 0],
+            textAlign: "center",
+          }}
         >
-            <AspectRatio
-                ratio={1}
-                sx={{
-                    bg: 'gray.3',
-                    alignItems: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    mb: 36,
-                    width: ['100%', '100%', '100%', '70%'],
-                    maxHeight: ['100%', '100%', '100%', '70%'],
-                    marginLeft: 'auto',
-                    marginRight:['auto', 'auto', 'auto', '10%']
-                }}
-            >
-                <iframe
-                    srcDoc={creativeCode}
-                    width={`100%`}
-                    height={`100%`}
-                    frameBorder="0"
-                    scrolling="no"
-                ></iframe>
-            </AspectRatio>
+          <AspectRatio
+            ratio={1}
+            sx={{
+              bg: "gray.3",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              mb: 36,
+              width: ["100%", "100%", "100%", "70%"],
+              maxHeight: ["100%", "100%", "100%", "70%"],
+              marginLeft: "auto",
+              marginRight: ["auto", "auto", "auto", "10%"],
+            }}
+          >
+            <iframe
+              srcDoc={creativeCode}
+              width={`100%`}
+              height={`100%`}
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
+          </AspectRatio>
         </Box>
       </Box>
-      </Layout>
-  )
-}
+    </Layout>
+  );
+};
 
-export default Home
+export default Home;
