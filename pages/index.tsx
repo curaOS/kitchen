@@ -22,17 +22,17 @@ const defaultDecoder = [
     text: "2",
   },
   {
-    type: "ellipse",
+    type: "text",
     color: "blue",
     text: "3",
   },
   {
-    type: "rectangle",
+    type: "text",
     color: "green",
     text: "4",
   },
   {
-    type: "point",
+    type: "text",
     color: "pink",
     text: "5",
   },
@@ -49,11 +49,6 @@ const Home: NextPage = () => {
     10000000000000,
     () => {}
   );
-
-  const submitChanges = (e) => {
-    e.preventDefault();
-    setDecoder(formState);
-  };
 
   function generateDrawJs(i: number): string {
     i -= 1;
@@ -211,10 +206,7 @@ const Home: NextPage = () => {
           </AspectRatio>
         </Box>
 
-        <OptionComp
-          formState={decoder}
-          setFormState={setDecoder}
-        />
+        <OptionComp formState={decoder} setFormState={setDecoder} />
       </Box>
     </Layout>
   );
