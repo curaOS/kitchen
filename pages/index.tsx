@@ -181,6 +181,7 @@ const Home: NextPage = () => {
             ml: [0, "auto", "auto", 0],
             mb: [4, 4, 0, 0],
             textAlign: "center",
+            maxWidth: 740
           }}
         >
           <AspectRatio
