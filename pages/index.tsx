@@ -64,24 +64,26 @@ const Home: NextPage = () => {
     let funcJs = "";
     let colorJs = "";
     if (decoder[i].type == "line") {
-      funcJs = `stroke("${decoder[i].color}")  
-      line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})
-      noStroke()`;
+      funcJs = `stroke("${decoder[i].color}");  
+      line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height});
+      noStroke();`;
     }
     if (decoder[i].type == "text") {
-      funcJs = `textSize(${decoder[i].size})
-      text("${decoder[i].text}", x, y)`;
+      funcJs = `textSize(${decoder[i].size});
+      text("${decoder[i].text}", x, y);`;
     }
     if (decoder[i].type == "ellipse") {
-      funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+      funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height});`;
     }
     if (decoder[i].type == "rectangle") {
-      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height});`;
     }
     if (decoder[i].type == "point") {
-      funcJs = `rect(x, y, ${decoder[i].width}, ${decoder[i].height})`;
+      funcJs = `stroke("${decoder[i].color}");
+      point(x, y);
+      noStroke();`;
     }
-    colorJs = `fill("${decoder[i].color}")`;
+    colorJs = `fill("${decoder[i].color}");`;
 
     return `
       ${colorJs}
