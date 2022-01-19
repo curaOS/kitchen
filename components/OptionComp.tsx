@@ -38,7 +38,8 @@ export default function OptionComp(props){
 				oldEntries.splice([id], 1, {
 					[name]: value,
 					color: '',
-					text:''
+					text:'',
+					size:''
 				})
 			} else {
 				oldEntries.splice([id], 1, {
@@ -98,9 +99,16 @@ export default function OptionComp(props){
           	{props.formState[selectedMenu-1].type == 'text' && 
 	            <Box sx={{ mt:2 }}>
 	              <Label htmlFor='text' sx={{ mb:2 }}>Text</Label>
-	              <Input name='text' id='text' min={0} value={props.formState[selectedMenu-1].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+	              <Input name='text' id='text' value={props.formState[selectedMenu-1].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
 	            </Box>
-        	}
+        		}
+
+        		{props.formState[selectedMenu-1].type == 'text' && 
+	            <Box sx={{ mt:2 }}>
+	              <Label htmlFor='size' sx={{ mb:2 }}>Text Size</Label>
+	              <Input name='size' id='size' type='number' min={0} value={props.formState[selectedMenu-1].size} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+	            </Box>
+        		}
 
             <Box sx={{ mt:2 }}>
               <Label htmlFor='color' sx={{ mb:2 }}>Color</Label>
