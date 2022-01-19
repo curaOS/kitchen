@@ -1,67 +1,60 @@
 // @ts-nocheck
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 import { Box, Heading, AspectRatio } from "theme-ui";
-import Layout from '../containers/Layout'
-import { useNFTMethod } from '@cura/hooks'
-import { utils } from 'near-api-js'
-import { useEffect, useState } from 'react'
+import Layout from "../containers/Layout";
+import { useNFTMethod } from "@cura/hooks";
+import { utils } from "near-api-js";
+import { useEffect, useState } from "react";
 
-import OptionComp from '../components/OptionComp'
+import OptionComp from "../components/OptionComp";
 
 const CONTRACT = "demo.ashen99.testnet";
-const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`) // 100 Tgas
+const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 Tgas
 const defaultDecoder = [
-   {
-     type: "line",
-     color: "#ffff00",
-     height: 10,
-     width: 10,
-   },
-   {
-     type: "text",
-     color: "#ffff00",
-     text: "😀",
-   },
-   {
-     type: "ellipse",
-     color: "#ffff00",
-     height: 10,
-     width: 10,
-   },
-   {
-     type: "rectangle",
-     color: "#ffff00",
-     height: 10,
-     width: 10,
-   },
-   {
-     type: "point",
-     color: "#ffff00",
-   },
+  {
+    type: "text",
+    color: "yellow",
+    text: "1",
+    size: 10,
+  },
+  {
+    type: "text",
+    color: "red",
+    text: "2",
+    size: 10,
+  },
+  {
+    type: "text",
+    color: "blue",
+    text: "3",
+    size: 10,
+  },
+  {
+    type: "text",
+    color: "green",
+    text: "4",
+    size: 10,
+  },
+  {
+    type: "text",
+    color: "pink",
+    text: "5",
+    size: 10,
+  },
 ];
 
-
 const Home: NextPage = () => {
-
   const [creativeCode, setCretiveCode] = useState(``);
   const [decoder, setDecoder] = useState(defaultDecoder);
-  const [formState, setFormState] = useState(defaultDecoder);
 
   const data = useNFTMethod(
-        `${CONTRACT}`,
-        `generate`,
-        {},
-        10000000000000,
-        () => {}
-  )
+    `${CONTRACT}`,
+    `generate`,
+    {},
+    10000000000000,
+    () => {}
+  );
 
-  const submitChanges=(e)=>{
-
-    e.preventDefault();
-    setDecoder(formState);
-  }
-
-  
   function generateDrawJs(i: number): string {
     i -= 1;
     let funcJs = "";
@@ -70,7 +63,8 @@ const Home: NextPage = () => {
       funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
     }
     if (decoder[i].type == "text") {
-      funcJs = `text("${decoder[i].text}", x, y)`;
+      funcJs = `textSize(${decoder[i].size})
+      text("${decoder[i].text}", x, y)`;
     }
     if (decoder[i].type == "ellipse") {
       funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
@@ -84,19 +78,18 @@ const Home: NextPage = () => {
     colorJs = `fill("${decoder[i].color}")`;
 
     return `
-      ${funcJs}
       ${colorJs}
+      ${funcJs}
     `;
   }
 
-  useEffect(()=>{
-    if(data?.data?.instructions){
-      const arweaveHTML = 
-          `<html>
+  useEffect(() => {
+    if (data?.data?.instructions) {
+      const arweaveHTML = `<html>
             <head>
               <meta charset="utf-8" />
                 <script>let jsonParams = '${JSON.stringify({
-                    instructions: data.data.instructions.split(`,`),
+                  instructions: data.data.instructions.split(`,`),
                 })}'
                 </script>
 
@@ -174,60 +167,56 @@ const Home: NextPage = () => {
               </style>
 
             </head>
-          </html>`
-      
+          </html>`;
 
-      setCretiveCode(arweaveHTML)
+      setCretiveCode(arweaveHTML);
     }
-  }, [data?.data?.instructions])
-  
+  }, [decoder, data?.data?.instructions]);
 
   return (
     <Layout>
       <Box sx={{ textAlign: "center" }}>
-        <Heading m={50} as='h1'>Share</Heading>
+        <Heading m={50} as="h1">
+          Share
+        </Heading>
         <Box
-            sx={{
-                display: ['block', 'block', 'block','inline-block'],
-                width: ['100%', '70%', '70%', '50%'],
-                mr: [0, 'auto', 'auto', 4],
-                ml: [0, 'auto', 'auto', 0],
-                mb: [4, 4, 0, 0],
-                textAlign:'center',
-            }}
+          sx={{
+            display: ["block", "block", "block", "inline-block"],
+            width: ["100%", "70%", "70%", "50%"],
+            mr: [0, "auto", "auto", 4],
+            ml: [0, "auto", "auto", 0],
+            mb: [4, 4, 0, 0],
+            textAlign: "center",
+            maxWidth: 740
+          }}
         >
-            <AspectRatio
-                ratio={1}
-                sx={{
-                    bg: 'gray.3',
-                    alignItems: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: ['100%', '100%', '100%', '70%'],
-                    maxHeight: ['100%', '100%', '100%', '70%'],
-                    marginLeft: 'auto',
-                    marginRight:['auto', 'auto', 'auto', 'auto']
-                }}
-            >
-                <iframe
-                    srcDoc={creativeCode}
-                    width={`100%`}
-                    height={`100%`}
-                    frameBorder="0"
-                    scrolling="no"
-                ></iframe>
-            </AspectRatio>
+          <AspectRatio
+            ratio={1}
+            sx={{
+              bg: "gray.3",
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              width: ["100%", "100%", "100%", "70%"],
+              maxHeight: ["100%", "100%", "100%", "70%"],
+              marginLeft: "auto",
+              marginRight: ["auto", "auto", "auto", "auto"],
+            }}
+          >
+            <iframe
+              srcDoc={creativeCode}
+              width={`100%`}
+              height={`100%`}
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
+          </AspectRatio>
         </Box>
 
-        <OptionComp 
-          formState={formState}
-          setFormState={setFormState}
-          submitChanges={submitChanges}
-        />
-
+        <OptionComp formState={decoder} setFormState={setDecoder} />
       </Box>
-      </Layout>
-  )
-}
+    </Layout>
+  );
+};
 
-export default Home
+export default Home;

@@ -121,14 +121,6 @@ export default function OptionComp(props){
 	            </>
         	}
           </Grid>
-          <Box
-          	sx={{
-          		mt:2,
-          		textAlign:'right'
-          	}}
-          >
-          	<Button>Submit Changes</Button>
-          </Box>
         </Box>
 	)
 }
