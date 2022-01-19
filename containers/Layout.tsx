@@ -58,7 +58,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
                     sx={{
                         py: 3,
                         px: 4,
-                        background: 'gray.3',
+                        background: 'lightGray',
                         display:'flex'
                     }}
                 >
