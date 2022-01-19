@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
 import { Box, Label, Select, Input, Grid, Button } from "theme-ui";
-import { ChromePicker } from 'react-color'
 
 const styles = {
 	menuBtn:{
@@ -10,72 +9,50 @@ const styles = {
 	}
 }
 
-const popover = {
-  position: 'absolute',
-  zIndex: '2',
-  bottom: '40px'
-}
-const cover = {
-  position: 'fixed',
-  top: '0px',
-  right: '0px',
-  bottom: '0px',
-  left: '0px',
-}
-
 const menuNo = [1,2,3,4,5]
 
 export default function OptionComp(props){
 
 	const [selectedMenu, setSelectedMenu] = useState(1);
-	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
 	const changeMenu=(id)=>{
-		setIsColorPickerOpen(false)
 		setSelectedMenu(id)
 	}
 
-	const handleColorPicker=()=>{
-  	setIsColorPickerOpen(!isColorPickerOpen)
-  }
-
 	const onChangeHandler=(e, id)=>{
-		let oldEntries = JSON.parse(JSON.stringify(props.formState));
+
+		const { name, value } = e.target;
 		id = id-1;
 
-		if(e.target){
-			const { name, value } = e.target;
+		let oldEntries = JSON.parse(JSON.stringify(props.formState));
 
-			if(name === 'type'){
-				if(value == 'line' || value == 'ellipse' || value == 'rectangle'){
-					oldEntries.splice([id], 1, {
-						[name]: value,
-						color: '',
-						height: 0,
-						width: 0
-					})
-				} else if(value == 'text'){
-					oldEntries.splice([id], 1, {
-						[name]: value,
-						color: '',
-						text:''
-					})
-				} else {
-					oldEntries.splice([id], 1, {
-						[name]: value,
-						color: '',
-					})
-				}
+		if(name === 'type'){
+			if(value == 'line' || value == 'ellipse' || value == 'rectangle'){
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+					height: 0,
+					width: 0
+				})
+			} else if(value == 'text'){
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+					text:'',
+					size:''
+				})
 			} else {
-				oldEntries[id][name] = value;
+				oldEntries.splice([id], 1, {
+					[name]: value,
+					color: '',
+				})
 			}
 		} else {
-			oldEntries[id].color = e.hex;
+			oldEntries[id][name] = value;
 		}
 
-
 		props.setFormState(oldEntries)
-  }
+  	}
 
 	return(
 		<Box
@@ -133,25 +110,9 @@ export default function OptionComp(props){
 	            </Box>
         		}
 
-            <Box sx={{ mt:2, position: 'relative' }}>
+            <Box sx={{ mt:2 }}>
               <Label htmlFor='color' sx={{ mb:2 }}>Color</Label>
-				      <Box
-				      	sx={{
-				      		background: props.formState[selectedMenu-1].color,
-				      		maxWidth:'150px',
-				      		height:'38px',
-				      		border: '1px solid',
-				      		borderRadius: '4px',
-				      		cursor: 'pointer'
-				      	}}
-				      	onClick={handleColorPicker}
-				      ></Box>
-
-				      {isColorPickerOpen && <Box style={ popover }>
-				      	<Box style={ cover } onClick={ handleColorPicker }/>
-				          <ChromePicker color={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
-				        </Box>
-				      }
+              <Input name='color' id='color' type='text' value={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
             </Box>
 
             {(props.formState[selectedMenu-1].type == 'line' || props.formState[selectedMenu-1].type == 'ellipse' || props.formState[selectedMenu-1].type == 'rectangle') &&
