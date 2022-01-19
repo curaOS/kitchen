@@ -15,26 +15,31 @@ const defaultDecoder = [
     type: "text",
     color: "yellow",
     text: "1",
+    size: 10,
   },
   {
     type: "text",
     color: "red",
     text: "2",
+    size: 10,
   },
   {
     type: "text",
     color: "blue",
     text: "3",
+    size: 10,
   },
   {
     type: "text",
     color: "green",
     text: "4",
+    size: 10,
   },
   {
     type: "text",
     color: "pink",
     text: "5",
+    size: 10,
   },
 ];
 
@@ -58,7 +63,8 @@ const Home: NextPage = () => {
       funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
     }
     if (decoder[i].type == "text") {
-      funcJs = `text("${decoder[i].text}", x, y)`;
+      funcJs = `textSize(${decoder[i].size})
+      text("${decoder[i].text}", x, y)`;
     }
     if (decoder[i].type == "ellipse") {
       funcJs = `ellipse(x, y, ${decoder[i].width}, ${decoder[i].height})`;
