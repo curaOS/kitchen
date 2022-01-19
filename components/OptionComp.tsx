@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
 import { Box, Label, Select, Input, Grid, Button } from "theme-ui";
+import { HexColorPicker } from "react-colorful";
+import { ChromePicker } from 'react-color'
 
 const styles = {
 	menuBtn:{
@@ -9,50 +11,72 @@ const styles = {
 	}
 }
 
+const popover = {
+  position: 'absolute',
+  zIndex: '2',
+  bottom: '40px'
+}
+const cover = {
+  position: 'fixed',
+  top: '0px',
+  right: '0px',
+  bottom: '0px',
+  left: '0px',
+}
+
 const menuNo = [1,2,3,4,5]
 
 export default function OptionComp(props){
 
 	const [selectedMenu, setSelectedMenu] = useState(1);
+	const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
 	const changeMenu=(id)=>{
+		setIsColorPickerOpen(false)
 		setSelectedMenu(id)
 	}
 
 	const onChangeHandler=(e, id)=>{
-
-		const { name, value } = e.target;
-		id = id-1;
-
 		let oldEntries = JSON.parse(JSON.stringify(props.formState));
+		id = id-1;
+		
+		if(e.target){
+			const { name, value } = e.target;
 
-		if(name === 'type'){
-			if(value == 'line' || value == 'ellipse' || value == 'rectangle'){
-				oldEntries.splice([id], 1, {
-					[name]: value,
-					color: '',
-					height: 0,
-					width: 0
-				})
-			} else if(value == 'text'){
-				oldEntries.splice([id], 1, {
-					[name]: value,
-					color: '',
-					text:'',
-					size:''
-				})
+			if(name === 'type'){
+				if(value == 'line' || value == 'ellipse' || value == 'rectangle'){
+					oldEntries.splice([id], 1, {
+						[name]: value,
+						color: '',
+						height: 0,
+						width: 0
+					})
+				} else if(value == 'text'){
+					oldEntries.splice([id], 1, {
+						[name]: value,
+						color: '',
+						text:''
+					})
+				} else {
+					oldEntries.splice([id], 1, {
+						[name]: value,
+						color: '',
+					})
+				}
 			} else {
-				oldEntries.splice([id], 1, {
-					[name]: value,
-					color: '',
-				})
+				oldEntries[id][name] = value;
 			}
 		} else {
-			oldEntries[id][name] = value;
+			oldEntries[id].color = e.hex;
 		}
+		
 
 		props.setFormState(oldEntries)
-  	}
+  }
+
+  const handleColorPicker=()=>{
+  	setIsColorPickerOpen(!isColorPickerOpen)
+  }
 
 	return(
 		<Box
@@ -99,20 +123,30 @@ export default function OptionComp(props){
           	{props.formState[selectedMenu-1].type == 'text' && 
 	            <Box sx={{ mt:2 }}>
 	              <Label htmlFor='text' sx={{ mb:2 }}>Text</Label>
-	              <Input name='text' id='text' value={props.formState[selectedMenu-1].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+	              <Input name='text' id='text' min={0} value={props.formState[selectedMenu-1].text} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
 	            </Box>
-        		}
+        	}
 
-        		{props.formState[selectedMenu-1].type == 'text' && 
-	            <Box sx={{ mt:2 }}>
-	              <Label htmlFor='size' sx={{ mb:2 }}>Text Size</Label>
-	              <Input name='size' id='size' type='number' min={0} value={props.formState[selectedMenu-1].size} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
-	            </Box>
-        		}
-
-            <Box sx={{ mt:2 }}>
+            <Box sx={{ mt:2, position: 'relative' }}>
               <Label htmlFor='color' sx={{ mb:2 }}>Color</Label>
-              <Input name='color' id='color' type='text' value={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+              {/*<HexColorPicker color={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />*/}
+				      <Box 
+				      	sx={{
+				      		background: props.formState[selectedMenu-1].color, 
+				      		maxWidth:'150px', 
+				      		height:'38px',
+				      		border: '1px solid',
+				      		borderRadius: '4px',
+				      		cursor: 'pointer'
+				      	}}
+				      	onClick={handleColorPicker}
+				      ></Box>
+				      
+				      {isColorPickerOpen && <Box style={ popover }>
+				      	<Box style={ cover } onClick={ handleColorPicker }/>
+				          <ChromePicker color={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />
+				        </Box>
+				      }
             </Box>
 
             {(props.formState[selectedMenu-1].type == 'line' || props.formState[selectedMenu-1].type == 'ellipse' || props.formState[selectedMenu-1].type == 'rectangle') &&
@@ -129,6 +163,14 @@ export default function OptionComp(props){
 	            </>
         	}
           </Grid>
+          <Box
+          	sx={{
+          		mt:2,
+          		textAlign:'right'
+          	}}
+          >
+          	<Button>Submit Changes</Button>
+          </Box>
         </Box>
 	)
 }
