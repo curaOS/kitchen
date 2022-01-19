@@ -64,7 +64,9 @@ const Home: NextPage = () => {
     let funcJs = "";
     let colorJs = "";
     if (decoder[i].type == "line") {
-      funcJs = `line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})`;
+      funcJs = `stroke("${decoder[i].color}")  
+      line(x, y, x + ${decoder[i].width}, y + ${decoder[i].height})
+      noStroke()`;
     }
     if (decoder[i].type == "text") {
       funcJs = `textSize(${decoder[i].size})
