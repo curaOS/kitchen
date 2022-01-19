@@ -80,8 +80,10 @@ const Home: NextPage = () => {
     }
     if (decoder[i].type == "point") {
       funcJs = `stroke("${decoder[i].color}");
+      strokeWeight(3);
       point(x, y);
-      noStroke();`;
+      noStroke();
+      strokeWeight(1);`;
     }
     colorJs = `fill("${decoder[i].color}");`;
 
