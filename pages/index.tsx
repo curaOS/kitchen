@@ -2,13 +2,15 @@
 import type { NextPage } from "next";
 import { Box, Heading, AspectRatio } from "theme-ui";
 import Layout from "../containers/Layout";
-import { useNFTMethod } from "@cura/hooks";
-import { utils } from "near-api-js";
+import { useNFTContract } from "@cura/hooks";
+import { Contract, utils } from "near-api-js";
 import { useEffect, useState } from "react";
 
 import OptionComp from "../components/OptionComp";
+import { Button } from "theme-ui";
+import { Spinner } from "theme-ui";
 
-const CONTRACT = "demo.ashen99.testnet";
+const CONTRACT_ADDRESS = "demo.ashen99.testnet";
 const CONTRACT_VIEW_GAS = utils.format.parseNearAmount(`0.00000000010`); // 100 Tgas
 const defaultDecoder = [
   {
@@ -46,14 +48,16 @@ const defaultDecoder = [
 const Home: NextPage = () => {
   const [creativeCode, setCretiveCode] = useState(``);
   const [decoder, setDecoder] = useState(defaultDecoder);
+  const [data, setData] = useState(null);
 
-  const data = useNFTMethod(
-    `${CONTRACT}`,
-    `generate`,
-    {},
-    10000000000000,
-    () => {}
-  );
+  const { contract } = useNFTContract(CONTRACT_ADDRESS);
+
+  async function generate() {
+    setData(null);
+    const newData = await contract.generate({}, CONTRACT_VIEW_GAS);
+    setData(newData);
+    console.log(newData);
+  }
 
   function generateDrawJs(i: number): string {
     i -= 1;
@@ -84,12 +88,12 @@ const Home: NextPage = () => {
   }
 
   useEffect(() => {
-    if (data?.data?.instructions) {
-      const arweaveHTML = `<html>
+    if (!data?.instructions) return;
+    const arweaveHTML = `<html>
             <head>
               <meta charset="utf-8" />
                 <script>let jsonParams = '${JSON.stringify({
-                  instructions: data.data.instructions.split(`,`),
+                  instructions: data.instructions.split(`,`),
                 })}'
                 </script>
 
@@ -169,16 +173,25 @@ const Home: NextPage = () => {
             </head>
           </html>`;
 
-      setCretiveCode(arweaveHTML);
-    }
-  }, [decoder, data?.data?.instructions]);
+    setCretiveCode(arweaveHTML);
+  }, [decoder, data?.instructions]);
 
+  useEffect(() => {
+    if (!contract?.account?.accountId) return;
+
+    generate();
+  }, [contract]);
   return (
     <Layout>
       <Box sx={{ textAlign: "center" }}>
-        <Heading m={50} as="h1">
-          Share
-        </Heading>
+        <Box m={50}>
+          <Heading mb={3} as="h1">
+            Share
+          </Heading>
+          <Button onClick={generate} sx={{ cursor: "pointer" }}>
+            generate
+          </Button>
+        </Box>
         <Box
           sx={{
             display: ["block", "block", "block", "inline-block"],
@@ -187,7 +200,7 @@ const Home: NextPage = () => {
             ml: [0, "auto", "auto", 0],
             mb: [4, 4, 0, 0],
             textAlign: "center",
-            maxWidth: 740
+            maxWidth: 740,
           }}
         >
           <AspectRatio
@@ -203,13 +216,17 @@ const Home: NextPage = () => {
               marginRight: ["auto", "auto", "auto", "auto"],
             }}
           >
-            <iframe
-              srcDoc={creativeCode}
-              width={`100%`}
-              height={`100%`}
-              frameBorder="0"
-              scrolling="no"
-            ></iframe>
+            {data == null ? (
+              <Spinner />
+            ) : (
+              <iframe
+                srcDoc={creativeCode}
+                width={`100%`}
+                height={`100%`}
+                frameBorder="0"
+                scrolling="no"
+              ></iframe>
+            )}
           </AspectRatio>
         </Box>
 
