@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
 import { Box, Label, Select, Input, Grid, Button } from "theme-ui";
-import { HexColorPicker } from "react-colorful";
 import { ChromePicker } from 'react-color'
 
 const styles = {
@@ -129,7 +128,6 @@ export default function OptionComp(props){
 
             <Box sx={{ mt:2, position: 'relative' }}>
               <Label htmlFor='color' sx={{ mb:2 }}>Color</Label>
-              {/*<HexColorPicker color={props.formState[selectedMenu-1].color} onChange={(e)=> onChangeHandler(e, selectedMenu)} />*/}
 				      <Box 
 				      	sx={{
 				      		background: props.formState[selectedMenu-1].color, 
